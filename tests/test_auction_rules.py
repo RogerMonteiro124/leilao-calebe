@@ -120,3 +120,25 @@ def test_persistencia_no_sqlite(client):
     db = SessionLocal()
     assert db.scalar(select(Round).where(Round.status == RoundStatus.ACTIVE)) is not None
     db.close()
+
+
+def test_valor_ficticio_decimal_com_virgula(client):
+    admin_login(client)
+    res = client.post(
+        "/admin/participants",
+        data={
+            "name": "Decimal",
+            "access_code": "56789",
+            "fixed_value": "12345,67",
+            "status_value": "available",
+        },
+        follow_redirects=False,
+    )
+    assert res.status_code == 303
+    start_first(client)
+    client.post("/logout")
+    login(client, "56789")
+    bid_res = client.post("/api/bid")
+    assert bid_res.status_code == 200
+    assert bid_res.json()["bid"]["value"] == 12345.67
+    assert bid_res.json()["bid"]["value_label"] == "T$ 12.345,67"

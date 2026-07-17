@@ -7,10 +7,34 @@ from sqlalchemy.orm import Session, joinedload
 from app.models import Bid, Item, ItemStatus, Participant, ParticipantStatus, Round, RoundStatus
 
 
-def money(value: int | None) -> str:
+def parse_money_value(value: str | int | float | None) -> float:
+    if value is None:
+        return 0.0
+    if isinstance(value, int | float):
+        return round(float(value), 2)
+    clean = str(value).strip().replace("T$", "").replace(" ", "")
+    if not clean:
+        return 0.0
+    if "," in clean:
+        clean = clean.replace(".", "").replace(",", ".")
+    else:
+        parts = clean.split(".")
+        if len(parts) > 2:
+            clean = "".join(parts)
+        elif len(parts) == 2 and len(parts[1]) == 3 and len(parts[0]) <= 3:
+            clean = "".join(parts)
+    return round(float(clean), 2)
+
+
+def money(value: int | float | None) -> str:
     if value is None:
         return "-"
-    return f"T$ {value:,.0f}".replace(",", ".")
+    numeric = round(float(value), 2)
+    if numeric.is_integer():
+        return f"T$ {numeric:,.0f}".replace(",", ".")
+    formatted = f"{numeric:,.2f}"
+    formatted = formatted.replace(",", "_").replace(".", ",").replace("_", ".")
+    return f"T$ {formatted}"
 
 
 def active_round(db: Session) -> Round | None:

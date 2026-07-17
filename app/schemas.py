@@ -1,10 +1,10 @@
-from pydantic import BaseModel, Field
+﻿from pydantic import BaseModel, Field
 
 
 class ParticipantInput(BaseModel):
     name: str = Field(min_length=1, max_length=120)
     access_code: str | None = Field(default=None, pattern=r"^\d{5}$")
-    fixed_value: int = Field(gt=0)
+    fixed_value: float = Field(gt=0)
     status: str = "available"
 
 

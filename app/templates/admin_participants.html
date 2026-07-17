@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="pt-BR">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Participantes</title><link rel="stylesheet" href="/static/css/app.css"></head>
 <body class="admin-body">
@@ -10,7 +10,7 @@
     <form method="post" action="/admin/participants" class="form-grid">
       <input name="name" placeholder="Nome" required>
       <input name="access_code" placeholder="Codigo vazio gera automatico" maxlength="5" pattern="[0-9]{5}">
-      <input name="fixed_value" type="number" placeholder="Valor ficticio" required>
+      <input name="fixed_value" type="text" inputmode="decimal" placeholder="Valor ficticio. Ex: 12345,67" required>
       <select name="status_value"><option value="available">disponivel</option><option value="blocked">bloqueado</option><option value="winner">vencedor</option></select>
       <button class="btn primary">Cadastrar</button>
     </form>
@@ -23,7 +23,7 @@
     <form method="post" action="/admin/participants/{{ p.id }}/edit" class="edit-row">
       <input name="name" value="{{ p.name }}">
       <input name="access_code" value="{{ p.access_code }}" maxlength="5">
-      <input name="fixed_value" type="number" value="{{ p.fixed_value }}">
+      <input name="fixed_value" type="text" inputmode="decimal" value="{{ p.fixed_value|money }}">
       <select name="status_value">
         <option value="available" {% if p.status == "available" %}selected{% endif %}>disponivel</option>
         <option value="winner" {% if p.status == "winner" %}selected{% endif %}>vencedor</option>

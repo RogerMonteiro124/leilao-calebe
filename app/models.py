@@ -1,6 +1,6 @@
 ﻿from datetime import datetime, timezone
 
-from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Index, Integer, String, Text
+from sqlalchemy import Boolean, Column, DateTime, Float, ForeignKey, Index, Integer, String, Text
 from sqlalchemy.orm import relationship
 
 from app.database import Base
@@ -35,7 +35,7 @@ class Participant(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(120), nullable=False, index=True)
     access_code = Column(String(5), nullable=False, unique=True, index=True)
-    fixed_value = Column(Integer, nullable=False)
+    fixed_value = Column(Float, nullable=False)
     status = Column(String(20), nullable=False, default=ParticipantStatus.AVAILABLE, index=True)
     won_item_id = Column(ForeignKey("items.id", ondelete="SET NULL"), nullable=True)
     created_at = Column(DateTime(timezone=True), default=utcnow, nullable=False)
@@ -54,7 +54,7 @@ class Item(Base):
     display_order = Column(Integer, nullable=False, default=0, index=True)
     status = Column(String(20), nullable=False, default=ItemStatus.WAITING, index=True)
     winner_id = Column(ForeignKey("participants.id", ondelete="SET NULL"), nullable=True)
-    winning_value = Column(Integer, nullable=True)
+    winning_value = Column(Float, nullable=True)
     closed_at = Column(DateTime(timezone=True), nullable=True)
     created_at = Column(DateTime(timezone=True), default=utcnow, nullable=False)
 
@@ -84,7 +84,7 @@ class Bid(Base):
     id = Column(Integer, primary_key=True)
     round_id = Column(ForeignKey("rounds.id", ondelete="CASCADE"), nullable=False)
     participant_id = Column(ForeignKey("participants.id", ondelete="CASCADE"), nullable=False)
-    bid_value = Column(Integer, nullable=False)
+    bid_value = Column(Float, nullable=False)
     active = Column(Boolean, nullable=False, default=True)
     created_at = Column(DateTime(timezone=True), default=utcnow, nullable=False)
     canceled_at = Column(DateTime(timezone=True), nullable=True)

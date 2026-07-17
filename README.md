@@ -59,7 +59,7 @@ Participantes:
 ```csv
 nome,codigo,valor
 Joao,12345,10000
-Maria,,15000
+Maria,,"15000,50"
 ```
 
 Itens:

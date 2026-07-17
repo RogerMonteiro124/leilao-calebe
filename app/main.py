@@ -165,13 +165,13 @@ async def create_participant(
     request: Request,
     name: str = Form(...),
     access_code: str = Form(""),
-    fixed_value: int = Form(...),
+    fixed_value: str = Form(...),
     status_value: str = Form(ParticipantStatus.AVAILABLE),
     db: Session = Depends(get_db),
 ):
     require_admin(request)
     code = access_code.strip() or generate_access_code(db)
-    participant = Participant(name=name.strip(), access_code=code, fixed_value=fixed_value, status=status_value)
+    participant = Participant(name=name.strip(), access_code=code, fixed_value=auction.parse_money_value(fixed_value), status=status_value)
     db.add(participant)
     try:
         db.commit()
@@ -188,7 +188,7 @@ async def edit_participant(
     participant_id: int,
     name: str = Form(...),
     access_code: str = Form(...),
-    fixed_value: int = Form(...),
+    fixed_value: str = Form(...),
     status_value: str = Form(...),
     db: Session = Depends(get_db),
 ):
@@ -198,7 +198,7 @@ async def edit_participant(
         raise HTTPException(404, "Participante nao encontrado")
     participant.name = name.strip()
     participant.access_code = access_code.strip()
-    participant.fixed_value = fixed_value
+    participant.fixed_value = auction.parse_money_value(fixed_value)
     participant.status = status_value
     db.commit()
     await broadcast_state(db, "participants_changed")
@@ -222,7 +222,7 @@ def import_participants(request: Request, file: UploadFile = File(...), db: Sess
     rows = read_csv_rows(file.file.read())
     for row in rows:
         code = (row.get("codigo") or "").strip() or generate_access_code(db)
-        db.add(Participant(name=(row.get("nome") or "").strip(), access_code=code, fixed_value=int(row.get("valor") or 0)))
+        db.add(Participant(name=(row.get("nome") or "").strip(), access_code=code, fixed_value=auction.parse_money_value(row.get("valor") or 0)))
     db.commit()
     return redirect("/admin/participants")
 
