@@ -162,7 +162,7 @@ Acesse:
 - <http://54.207.248.135>
 - <http://54.207.248.135/admin/login>
 
-O arquivo de Nginx já inclui proxy para WebSocket.
+O arquivo de Nginx já inclui proxy para WebSocket e `client_max_body_size 25M` para aceitar fotos de celular. Na aplicação, `UPLOAD_MAX_BYTES=20971520` libera imagens de até 20 MB.
 
 ## HTTPS com Certbot
 

@@ -15,7 +15,7 @@ class Settings:
     admin_username: str = os.getenv("ADMIN_USERNAME", "admin")
     admin_password: str = os.getenv("ADMIN_PASSWORD", "senha-forte")
     database_url: str = os.getenv("DATABASE_URL", f"sqlite:///{BASE_DIR / 'leilao.db'}")
-    upload_max_bytes: int = int(os.getenv("UPLOAD_MAX_BYTES", "5242880"))
+    upload_max_bytes: int = int(os.getenv("UPLOAD_MAX_BYTES", "20971520"))
     upload_dir: Path = BASE_DIR / "static" / "uploads"
 
 

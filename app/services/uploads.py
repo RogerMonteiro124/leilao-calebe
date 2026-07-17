@@ -1,4 +1,4 @@
-import secrets
+﻿import secrets
 from pathlib import Path
 
 from fastapi import HTTPException, UploadFile, status
@@ -19,7 +19,7 @@ async def save_image(upload: UploadFile | None) -> str | None:
 
     data = await upload.read()
     if len(data) > settings.upload_max_bytes:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Imagem excede o limite permitido")
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Imagem excede o limite permitido. Envie uma imagem de ate 20 MB.")
 
     settings.upload_dir.mkdir(parents=True, exist_ok=True)
     filename = f"{secrets.token_urlsafe(18)}{ext}"
