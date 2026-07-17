@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+app/leilao.db
+app/leilao.db-shm
+app/leilao.db-wal
+app/static/uploads/*
+!app/static/uploads/.gitkeep
+!app/static/uploads/logo2026.png
+.env
+backups/
