@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Itens</title><link rel="stylesheet" href="/static/css/app.css"></head>
+<body class="admin-body">
+{% include "_admin_nav.html" %}
+<main class="admin-shell">
+  <h1>Itens</h1>
+  <section class="panel">
+    <h2>Novo item</h2>
+    <form method="post" action="/admin/items" enctype="multipart/form-data" class="form-grid">
+      <input name="name" placeholder="Nome" required>
+      <input name="display_order" type="number" placeholder="Ordem" required>
+      <textarea name="description" placeholder="Descricao"></textarea>
+      <input type="file" name="image" accept="image/jpeg,image/png,image/webp">
+      <button class="btn primary">Cadastrar</button>
+    </form>
+    <form method="post" action="/admin/items/import" enctype="multipart/form-data" class="inline-form">
+      <input type="file" name="file" accept=".csv" required><button class="btn">Importar CSV</button><a class="btn ghost" href="/admin/export/items">Exportar CSV</a>
+    </form>
+  </section>
+  <section class="panel table-list">
+  {% for item in items %}
+    <form method="post" action="/admin/items/{{ item.id }}/edit" enctype="multipart/form-data" class="edit-row">
+      <input name="name" value="{{ item.name }}">
+      <input name="display_order" type="number" value="{{ item.display_order }}">
+      <input name="description" value="{{ item.description or '' }}">
+      <select name="status_value">
+        <option value="waiting" {% if item.status == "waiting" %}selected{% endif %}>aguardando</option>
+        <option value="active" {% if item.status == "active" %}selected{% endif %}>ativo</option>
+        <option value="closed" {% if item.status == "closed" %}selected{% endif %}>encerrado</option>
+        <option value="canceled" {% if item.status == "canceled" %}selected{% endif %}>cancelado</option>
+      </select>
+      <input type="file" name="image" accept="image/jpeg,image/png,image/webp">
+      <button class="btn small">Salvar</button>
+    </form>
+    <form method="post" action="/admin/items/{{ item.id }}/delete"><button class="btn small danger">Excluir {{ item.name }}</button></form>
+  {% endfor %}
+  </section>
+</main>
+</body>
+</html>

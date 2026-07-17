@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Participantes</title><link rel="stylesheet" href="/static/css/app.css"></head>
+<body class="admin-body">
+{% include "_admin_nav.html" %}
+<main class="admin-shell">
+  <h1>Participantes</h1>
+  <section class="panel">
+    <h2>Novo participante</h2>
+    <form method="post" action="/admin/participants" class="form-grid">
+      <input name="name" placeholder="Nome" required>
+      <input name="access_code" placeholder="Codigo vazio gera automatico" maxlength="5" pattern="[0-9]{5}">
+      <input name="fixed_value" type="number" placeholder="Valor ficticio" required>
+      <select name="status_value"><option value="available">disponivel</option><option value="blocked">bloqueado</option><option value="winner">vencedor</option></select>
+      <button class="btn primary">Cadastrar</button>
+    </form>
+    <form method="post" action="/admin/participants/import" enctype="multipart/form-data" class="inline-form">
+      <input type="file" name="file" accept=".csv" required><button class="btn">Importar CSV</button><a class="btn ghost" href="/admin/export/participants">Exportar CSV</a>
+    </form>
+  </section>
+  <section class="panel table-list">
+  {% for p in participants %}
+    <form method="post" action="/admin/participants/{{ p.id }}/edit" class="edit-row">
+      <input name="name" value="{{ p.name }}">
+      <input name="access_code" value="{{ p.access_code }}" maxlength="5">
+      <input name="fixed_value" type="number" value="{{ p.fixed_value }}">
+      <select name="status_value">
+        <option value="available" {% if p.status == "available" %}selected{% endif %}>disponivel</option>
+        <option value="winner" {% if p.status == "winner" %}selected{% endif %}>vencedor</option>
+        <option value="blocked" {% if p.status == "blocked" %}selected{% endif %}>bloqueado</option>
+      </select>
+      <button class="btn small">Salvar</button>
+    </form>
+    <form method="post" action="/admin/participants/{{ p.id }}/delete"><button class="btn small danger">Excluir {{ p.name }}</button></form>
+  {% endfor %}
+  </section>
+</main>
+</body>
+</html>

@@ -1,0 +1,70 @@
+﻿<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin - {{ event_name }}</title>
+  <link rel="stylesheet" href="/static/css/app.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+</head>
+<body class="admin-body">
+  {% include "_admin_nav.html" %}
+  <main class="admin-shell">
+    <h1>Dashboard</h1>
+    <section id="admin-live" class="grid two">
+      <article class="panel">
+        <h2>Rodada atual</h2>
+        {% if state.item %}
+          {% if state.item.image_path %}<img class="admin-photo" src="{{ state.item.image_path }}" alt="">{% endif %}
+          <h3>{{ state.item.name }}</h3>
+          <p>{{ state.item.position }}</p>
+          <div class="round-stats">
+            <div><span>Interessados</span><strong data-admin="count">{{ state.interested_count }}</strong></div>
+            <div><span>Status</span><strong>{{ state.round.status }}</strong></div>
+          </div>
+          <div class="highest-bid-card">
+            <span>Maior lance agora</span>
+            <strong data-admin="highest">{{ state.highest_value|money if state.highest_value else "T$ 0" }}</strong>
+          </div>
+          <a class="btn primary full" href="/admin/live">Abrir tela ao vivo</a>
+        {% else %}
+          <p>Aguardando inicio de rodada.</p>
+        {% endif %}
+      </article>
+      <article class="panel">
+        <h2>Iniciar item</h2>
+        <div class="list">
+        {% for item in items %}
+          <form method="post" action="/admin/round/start/{{ item.id }}" class="row-form">
+            <input type="hidden" name="next_url" value="/admin/live">
+            <span>#{{ item.display_order }} {{ item.name }} <small>{{ item.status }}</small></span>
+            <button class="btn small" {% if item.status == "canceled" %}disabled{% endif %}>Iniciar</button>
+          </form>
+        {% endfor %}
+        </div>
+        <form method="post" action="/admin/round/reopen" class="inline-form">
+          <input type="hidden" name="next_url" value="/admin/live">
+          <input name="item_id" placeholder="ID do item para reabrir">
+          <button class="btn">Reabrir</button>
+        </form>
+      </article>
+    </section>
+    <section class="panel">
+      <h2>Interessados em tempo real</h2>
+      <div id="admin-bids" class="table-list">
+        {% for bid in state.bids or [] %}
+          <form method="post" action="/admin/bids/{{ bid.id }}/remove" class="bid-row">
+            <span>{{ bid.participant_name }}</span>
+            <strong class="bid-value-big">{{ bid.value|money }}</strong>
+            <small>{{ bid.created_at }}</small>
+            <button class="btn small danger">Remover</button>
+          </form>
+        {% else %}
+          <p>Nenhum interessado ainda.</p>
+        {% endfor %}
+      </div>
+    </section>
+  </main>
+  <script src="/static/js/admin.js"></script>
+</body>
+</html>

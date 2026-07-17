@@ -1,0 +1,71 @@
+﻿<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rodada ao vivo - {{ event_name }}</title>
+  <link rel="stylesheet" href="/static/css/app.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+</head>
+<body class="admin-body live-admin-body">
+  {% include "_admin_nav.html" %}
+  <main class="admin-shell live-admin-shell">
+    <section class="live-board">
+      <article class="panel live-item-panel">
+        {% if state.item %}
+          <div class="live-item-media">
+            <img src="{{ state.item.image_path }}" alt="">
+          </div>
+          <div class="live-item-copy">
+            <span class="position">{{ state.item.position }}</span>
+            <h1>{{ state.item.name }}</h1>
+            <p>{{ state.item.description }}</p>
+          </div>
+          <div class="highest-bid-card live-highest">
+            <span>Maior lance agora</span>
+            <strong data-admin="highest">{{ state.highest_value|money if state.highest_value else "T$ 0" }}</strong>
+          </div>
+          <div class="round-stats live-stats">
+            <div><span>Interessados</span><strong data-admin="count">{{ state.interested_count }}</strong></div>
+            <div><span>Status</span><strong>{{ state.round.status }}</strong></div>
+          </div>
+          <div class="admin-actions-grid">
+            <form method="post" action="/admin/round/close"><input type="hidden" name="next_url" value="/admin/live"><button class="btn primary full">Encerrar rodada</button></form>
+            <form method="post" action="/admin/round/cancel"><input type="hidden" name="next_url" value="/admin/live"><button class="btn danger full">Cancelar item</button></form>
+          </div>
+        {% else %}
+          <div class="live-empty">
+            <img class="brand-logo auth-logo" src="/static/uploads/logo2026.png" alt="{{ event_name }}">
+            <h1>Nenhuma rodada ativa</h1>
+            <p>Inicie um item no Dashboard para acompanhar os lances aqui.</p>
+            <a class="btn primary" href="/admin">Abrir Dashboard</a>
+          </div>
+        {% endif %}
+      </article>
+
+      <aside class="panel live-bids-panel">
+        <div class="section-title-row">
+          <h2>Histórico de lances</h2>
+          <span>{{ state.interested_count or 0 }}</span>
+        </div>
+        <div id="admin-bids" class="live-bids-list">
+          {% for bid in state.bids or [] %}
+            <form method="post" action="/admin/bids/{{ bid.id }}/remove" class="live-bid-row">
+              <input type="hidden" name="next_url" value="/admin/live">
+              <div>
+                <strong>{{ bid.participant_name }}</strong>
+                <small>{{ bid.created_at }}</small>
+              </div>
+              <strong class="bid-value-big">{{ bid.value|money }}</strong>
+              <button class="btn small danger">Remover</button>
+            </form>
+          {% else %}
+            <p>Nenhum lance confirmado ainda.</p>
+          {% endfor %}
+        </div>
+      </aside>
+    </section>
+  </main>
+  <script src="/static/js/admin.js"></script>
+</body>
+</html>

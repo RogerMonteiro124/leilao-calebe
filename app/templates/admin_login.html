@@ -1,0 +1,21 @@
+﻿<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin - {{ event_name }}</title>
+  <link rel="stylesheet" href="/static/css/app.css">
+</head>
+<body class="auth-body">
+  <main class="auth-card">
+    <img class="brand-logo auth-logo" src="/static/uploads/logo2026.png" alt="{{ event_name }}">
+    <h1>Administração</h1>
+    <form method="post" action="/admin/login" class="stack">
+      <input name="username" placeholder="Usuário" required>
+      <input name="password" type="password" placeholder="Senha" required>
+      {% if error %}<div class="alert error">{{ error }}</div>{% endif %}
+      <button class="btn primary" type="submit">Entrar</button>
+    </form>
+  </main>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Historico</title><link rel="stylesheet" href="/static/css/app.css"></head>
+<body class="admin-body">
+{% include "_admin_nav.html" %}
+<main class="admin-shell">
+  <h1>Historico</h1>
+  <a class="btn ghost" href="/admin/export/results">Exportar resultados</a>
+  <section class="panel table-list">
+    {% for item in items %}
+      <div class="history-row">
+        <strong>#{{ item.display_order }} {{ item.name }}</strong>
+        <span>{{ item.status }}</span>
+        <span>{{ item.winner.name if item.winner else "Sem vencedor" }}</span>
+        <span>{{ item.winning_value|money if item.winning_value else "-" }}</span>
+        <span>{{ counts.get(item.id, 0) }} interessados</span>
+      </div>
+    {% endfor %}
+  </section>
+</main>
+</body>
+</html>

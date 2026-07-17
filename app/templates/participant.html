@@ -1,0 +1,34 @@
+﻿<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ event_name }}</title>
+  <link rel="stylesheet" href="/static/css/app.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+</head>
+<body>
+  <main class="participant-shell">
+    <header class="topbar">
+      <div class="participant-brand">
+        <img class="brand-logo top-logo" src="/static/uploads/logo2026.png" alt="{{ event_name }}">
+        <div>
+          <strong>{{ participant.name }}</strong>
+          <span>{{ participant.fixed_value|money }}</span>
+        </div>
+      </div>
+      <div id="connection" class="connection"><i class="bi bi-broadcast"></i> conectando</div>
+    </header>
+    <section class="live-pill"><i class="bi bi-lightning-charge-fill"></i> Leilão ao vivo</section>
+    <section id="participant-app" class="item-card loading">
+      <div class="skeleton image"></div>
+      <div class="skeleton line"></div>
+      <div class="skeleton line short"></div>
+    </section>
+    <form method="post" action="/logout">
+      <button class="btn ghost full" type="submit">Sair</button>
+    </form>
+  </main>
+  <script src="/static/js/participant.js"></script>
+</body>
+</html>

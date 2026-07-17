@@ -1,0 +1,15 @@
+﻿[Unit]
+Description=Leilão Calebe FastAPI
+After=network.target
+
+[Service]
+User=www-data
+Group=www-data
+WorkingDirectory=/opt/leilao-calebe
+EnvironmentFile=/opt/leilao-calebe/.env
+ExecStart=/opt/leilao-calebe/.venv/bin/gunicorn -c gunicorn.conf.py app.main:app
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

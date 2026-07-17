@@ -1,0 +1,10 @@
+services:
+  leilao:
+    build: .
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    volumes:
+      - ./app/leilao.db:/app/app/leilao.db
+      - ./app/static/uploads:/app/app/static/uploads
